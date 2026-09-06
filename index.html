@@ -32,8 +32,9 @@
           alert("Nincs kiválasztott csomagautomata!");
           return;
         }
-        const id = String(point.operator_id || "").trim();
+        const id = String(point.operator_id || point.place_id || "").trim();
         const name = String(point.name || "").trim();
+        
         let address = "";
         if (point address) { 
           address = String(point.address.full || point.address.street || "").trim();
@@ -45,6 +46,7 @@
           + "&foxpost_name=" + encodeURIComponent(name)
           + "&foxpost_address=" + encodeURIComponent(address);
         document.body.innerHTML = "<h2 style='font-family:sans-serif;text-align:center;padding-top:40px;'>Csomagautomata kiválasztva.<br>Visszairányítás...</h2>";
+        
         setTimeout(function () {
           window.location.href = tallyUrl;
         }, 1000);
