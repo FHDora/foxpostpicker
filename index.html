@@ -23,7 +23,12 @@
   <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Kérjük, válassza ki az Önnek megfelelő automatát vagy átvevőhelyet a térképen!</p>
   <iframe src="https://cdn.foxpost.hu/apt-finder/v1/app/"></iframe>
   <script>
-    window.addEventListener('message', function (event) {
+    function receiveMessage(event) {
+    // if (event.origin !== 'https://cdn.foxpost.hu') {return};
+    var apt = JSON.parse(event.data);
+
+    console.log(apt.name, apt.findme);
+}
       if (event.data && event.data.operator === 'foxpost' && event.data.action === 'apt_selected') {
         const point = event.data.apt;
         if (!point) {return; }
