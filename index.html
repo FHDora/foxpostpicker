@@ -19,7 +19,7 @@
 </head>
 <body>
 
-  <h2>Foxpost csomagautomata kiválasztása</h2>
+  <h2>Foxpost csomagautomata vagy átvevőhely kiválasztása</h2>
   <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Kérjük, válassza ki az Önnek megfelelő automatát vagy átvevőhelyet a térképen!</p>
 
   <iframe src="https://cdn.foxpost.hu/apt-finder/v1/app/"></iframe>
@@ -32,7 +32,7 @@
           alert("Nincs kiválasztott csomagautomata!");
           return;
         }
-        const id = String(point.id || "").trim();
+        const id = String(point.operator_id || "").trim();
         const name = String(point.name || "").trim();
         const address = String(point.address || "").trim();
         const params = new URLSearchParams(window.location.search);
