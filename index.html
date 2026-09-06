@@ -34,9 +34,12 @@
         }
         const id = String(point.operator_id || "").trim();
         const name = String(point.name || "").trim();
-        const address = String(point.address || "").trim();
+        let address = "";
+        if (point address) { 
+          address = String(point.address.full || point.address.street || "").trim();
+         } 
         const params = new URLSearchParams(window.location.search);
-        const returnUrl = params.get("returnUrl") || "https://tally.so/r/RGNKA4";
+        const returnUrl = params.get("returnUrl") || "https://tally.so";
         const tallyUrl = returnUrl
           + "?foxpost_id=" + encodeURIComponent(id)
           + "&foxpost_name=" + encodeURIComponent(name)
