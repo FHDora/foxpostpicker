@@ -21,36 +21,23 @@
 
   <h2>Foxpost csomagautomata vagy átvevőhely kiválasztása</h2>
   <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Kérjük, válassza ki az Önnek megfelelő automatát vagy átvevőhelyet a térképen!</p>
-
   <iframe src="https://cdn.foxpost.hu/apt-finder/v1/app/"></iframe>
-
   <script>
     window.addEventListener('message', function (event) {
       if (event.data && event.data.operator === 'foxpost' && event.data.action === 'apt_selected') {
         const point = event.data.apt;
-        if (!point || !point.name) {
-          alert("Nincs kiválasztott csomagautomata!");
-          return;
-        }
+        if (!point) {return; }
         const id = String(point.operator_id || point.place_id || "").trim();
         const name = String(point.name || "").trim();
         let address = "";
-        if (point address) { 
-          address = String(point.address.full || point.address.street || "").trim();
-         } 
+        if (point address) { address = String(point.address.full || point.address.street || "").trim(); } 
         const params = new URLSearchParams(window.location.search);
         const returnUrl = params.get("returnUrl") || "https://tally.so";
-        const tallyUrl = returnUrl
-          + "?foxpost_id=" + encodeURIComponent(id)
-          + "&foxpost_name=" + encodeURIComponent(name)
-          + "&foxpost_address=" + encodeURIComponent(address);
+        const tallyUrl = returnUrl + "?foxpost_id=" + encodeURIComponent(id) + "&foxpost_name=" + encodeURIComponent(name) + "&foxpost_address=" + encodeURIComponent(address);
         document.body.innerHTML = "<h2 style='font-family:sans-serif;text-align:center;padding-top:40px;'>Csomagautomata kiválasztva.<br>Visszairányítás...</h2>";
-        setTimeout(function () {
-          window.location.href = tallyUrl;
-        }, 1000);
+        setTimeout(function () { window.location.href = tallyUrl; }, 1000);
       }
     });
   </script>
-
 </body>
 </html>
