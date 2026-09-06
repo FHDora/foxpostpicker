@@ -37,7 +37,7 @@
         let address = "";
         if (point address) { address = String(point.address.full || point.address.street || "").trim(); } 
         const params = new URLSearchParams(window.location.search);
-        const returnUrl = params.get("returnUrl") || "https://tally.so";
+        const returnUrl = params.get("returnUrl") || "https://tally.so/r/RGNKA4";
         const tallyUrl = returnUrl + "?foxpost_id=" + encodeURIComponent(id) + "&foxpost_name=" + encodeURIComponent(name) + "&foxpost_address=" + encodeURIComponent(address);
         document.body.innerHTML = "<h2 style='font-family:sans-serif;text-align:center;padding-top:40px;'>Csomagautomata kiválasztva.<br>Visszairányítás...</h2>";
         setTimeout(function () { window.location.href = tallyUrl; }, 1000);
