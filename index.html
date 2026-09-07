@@ -39,11 +39,18 @@
                     const params = new URLSearchParams(window.location.search);
                     const returnUrl = params.get("returnUrl") || "https://tally.so/r/RGNKA4";
 
+                    let cleanId = "";
+                    if (apt.operator_id) {
+                        cleanId = String(apt.operator_id).trim();
+                    } else if (apt.place_id) {
+                        cleanId = String(apt.place_id).trim();
+                    }
+                    
                     // Tally URL összeállítása a FoxPost adataival és az ID-val (apt.findme)
                     const tallyUrl = returnUrl 
                         + "?foxpost_name=" + encodeURIComponent(apt.name)
                         + "&foxpost_address=" + encodeURIComponent(apt.address || "")
-                        + "&foxpost_id=" + encodeURIComponent(apt.place_id || operator_id "");
+                        + "&foxpost_id=" + encodeURIComponent(cleanId);
 
                     // Felület váltása a visszajelzéshez
                     document.getElementById("foxpost-iframe").style.display = "none";
