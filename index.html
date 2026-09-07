@@ -43,7 +43,7 @@
                     const tallyUrl = returnUrl 
                         + "?foxpost_name=" + encodeURIComponent(apt.name)
                         + "&foxpost_address=" + encodeURIComponent(apt.address || "")
-                        + "&foxpost_id=" + encodeURIComponent(apt.findme || "");
+                        + "&foxpost_id=" + encodeURIComponent(apt.place_id || operator_id "");
 
                     // Felület váltása a visszajelzéshez
                     document.getElementById("foxpost-iframe").style.display = "none";
