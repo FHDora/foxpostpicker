@@ -1,48 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="hu">
 <head>
-  <meta charset="UTF-8">
-  <title>Foxpost</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-      text-align: center;
-      margin: 0;
-    }
-    iframe {
-      border: none;
-      width: 100%;
-      height: 650px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoxPost Csomagpont Kereső</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: sans-serif; }
+        iframe { border: none; width: 100%; height: 100vh; display: block; }
+        .loading-screen { display: none; text-align: center; padding-top: 40px; }
+    </style>
 </head>
 <body>
 
-  <h2>Foxpost csomagautomata vagy átvevőhely kiválasztása</h2>
-  <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Kérjük, válassza ki az Önnek megfelelő automatát vagy átvevőhelyet a térképen!</p>
-  <iframe src="https://cdn.foxpost.hu/apt-finder/v1/app/"></iframe>
-  <script>
-    function receiveMessage(event) {
-    // if (event.origin !== 'https://cdn.foxpost.hu') {return};
-    var apt = JSON.parse(event.data);
+    <!-- A FoxPost hivatalos widget-e -->
+    <iframe id="foxpost-iframe" loading="lazy" src="https://cdn.foxpost.hu/apt-finder/v1/app/"></iframe>
 
-    console.log(apt.name, apt.findme);
-}
-      if (event.data && event.data.operator === 'foxpost' && event.data.action === 'apt_selected') {
-        const point = event.data.apt;
-        if (!point) {return; }
-        const id = String(point.operator_id || point.place_id || "").trim();
-        const name = String(point.name || "").trim();
-        let address = "";
-        if (point address) { address = String(point.address.full || point.address.street || "").trim(); } 
-        const params = new URLSearchParams(window.location.search);
-        const returnUrl = params.get("returnUrl") || "https://tally.so/r/RGNKA4";
-        const tallyUrl = returnUrl + "?foxpost_id=" + encodeURIComponent(id) + "&foxpost_name=" + encodeURIComponent(name) + "&foxpost_address=" + encodeURIComponent(address);
-        document.body.innerHTML = "<h2 style='font-family:sans-serif;text-align:center;padding-top:40px;'>Csomagautomata kiválasztva.<br>Visszairányítás...</h2>";
-        setTimeout(function () { window.location.href = tallyUrl; }, 1000);
-      }
-    });
-  </script>
+    <!-- Visszairányítási képernyő -->
+    <div id="redirect-screen" class="loading-screen">
+        <h2>Csomagpont kiválasztva.<br>Visszairányítás a Tally-ra...</h2>
+    </div>
+
+    <script>
+        // Figyeljük a FoxPost iframe-ből érkező üzeneteket
+        window.addEventListener("message", receiveMessage, false);
+
+        function receiveMessage(event) {
+            // Biztonsági ellenőrzés
+            if (event.origin !== 'https://cdn.foxpost.hu') { return; }
+
+            try {
+                // A FoxPost-tól kapott adatok feldolgozása
+                const apt = JSON.parse(event.data);
+                
+                // Csak akkor lépünk tovább, ha valódi pontot választottak ki
+                if (apt && apt.name) {
+                    
+                    // URL paraméterek kiolvasása (pl. returnUrl)
+                    const params = new URLSearchParams(window.location.search);
+                    const returnUrl = params.get("returnUrl") || "https://tally.so";
+
+                    // Tally URL összeállítása a FoxPost adataival és az ID-val (apt.findme)
+                    const tallyUrl = returnUrl 
+                        + "?foxpost_name=" + encodeURIComponent(apt.name)
+                        + "&foxpost_address=" + encodeURIComponent(apt.address || "")
+                        + "&foxpost_id=" + encodeURIComponent(apt.findme || "");
+
+                    // Felület váltása a visszajelzéshez
+                    document.getElementById("foxpost-iframe").style.display = "none";
+                    document.getElementById("redirect-screen").style.display = "block";
+
+                    // Visszairányítás 1 másodperc múlva
+                    setTimeout(function () {
+                        window.location.href = tallyUrl;
+                    }, 1000);
+                }
+            } catch (e) {
+                console.error("Hiba az adatok feldolgozásakor:", e);
+            }
+        }
+    </script>
 </body>
 </html>
